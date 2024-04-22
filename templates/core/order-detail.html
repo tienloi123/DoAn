@@ -1,0 +1,303 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+ {% block content %}
+<style>
+.menuitem {
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.menuitem i {
+    margin-right: 10px;
+}
+
+.menuitem:hover {
+    background-color: #f0f0f0;
+}
+
+
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-JoQXqnJsHxW6SH+HU33jv3OnohN6HZkFe+gIoJb4v19i+lKElHMkYWS3T92AIzYmxlGWmvfM5MxZ5NILFjGnaw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<body>
+
+
+
+    <nav aria-label="breadcrumb" class="w-100 float-left">
+        <ol class="breadcrumb parallax justify-content-center" data-source-url="{% static 'img/banner/parallax.jpg' %}" style="background-image: url(&quot;img/banner/parallax.jpg&quot;); background-position: 50% 0.809717%;">
+            <li class="breadcrumb-item"><a href="#">Hello</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ request.user|title }}</li>
+        </ol>
+    </nav>
+
+    <div class="main-content w-100 float-left blog-list">
+        <div class="container">
+            <div class="row">
+
+                <div class="products-grid col-xl-9 col-lg-8 order-lg-2">
+                    <div id="content" class="container">
+                    <div id="dashboard-content">
+                        <!-- Nội dung của trang Dashboard -->
+                    </div>
+                    <div id="orders-content" style="display: none;">
+                        <style>
+                        /* CSS để thêm viền màu xám cho bảng */
+                        table {
+                            border-collapse: collapse;
+                            width: 100%;
+                        }
+
+                        th, td {
+                            border: 1px solid #ccc;
+                            padding: 8px;
+                            text-align: left;
+                        }
+
+                        tr:nth-child(even) {
+                            background-color: #f2f2f2;
+                        }
+
+                        th {
+                            background-color: #f0f0f0;
+                            color: black;
+                        }
+                    </style>
+
+                    <!-- HTML của bảng -->
+                    <div id="content" class="container">
+                        <h2>Your Orders</h2>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Order INV</th>
+                                        <th>Image</th>
+                                        <th>Title</th>
+                                        <th>Price</th>
+                                        <th>Qty</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for o in order_items %}
+                                    <tr>
+                                        <td>INV-{{o.id}}</td>
+                                        <td>
+                                            <p>
+                                                <img style="width: 40px; height: 40px" src="{{ o.image }}">
+                                            </p>
+                                        </td>
+                                        <td>{{o.item}}</td>
+                                        <td>{{o.price}}</td>
+                                        <td>{{o.qty}}</td>
+                                        <td>{{o.total}}</td>
+
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    </div>
+                    <div id="track-content" style="display: none;">
+                        <!-- Nội dung của trang Track your order -->
+                    </div>
+                    <div id="address-content" style="display: none;">
+                        <!-- Nội dung của trang My address -->
+                    </div>
+                    <div id="account-content" style="display: none;">
+                         <div class="row">
+                        <div class="col-lg-12 order-lg-last account-content">
+                            <h4>Edit Account Information</h4>
+                            <form action="#" class="myacoount-form">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group required-field">
+                                                    <label for="acc-name">First Name <span class="required">*</span></label>
+                                                    <input type="text" class="form-control" id="acc-name" name="acc-name" required="">
+                                                </div>
+                                                <!-- End .form-group -->
+                                            </div>
+                                            <!-- End .col-md-4 -->
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="acc-mname">Middle Name <span class="required">*</span></label>
+                                                    <input type="text" class="form-control" id="acc-mname" name="acc-mname">
+                                                </div>
+                                                <!-- End .form-group -->
+                                            </div>
+                                            <!-- End .col-md-4 -->
+
+                                            <div class="col-md-4">
+                                                <div class="form-group required-field">
+                                                    <label for="acc-lastname">Last Name <span class="required">*</span></label>
+                                                    <input type="text" class="form-control" id="acc-lastname" name="acc-lastname" required="">
+                                                </div>
+                                                <!-- End .form-group -->
+                                            </div>
+                                            <!-- End .col-md-4 -->
+                                        </div>
+                                        <!-- End .row -->
+                                    </div>
+                                    <!-- End .col-sm-11 -->
+                                </div>
+                                <!-- End .row -->
+
+                                <div class="form-group required-field">
+                                    <label for="acc-email">Email</label>
+                                    <input type="email" class="form-control" id="acc-email" name="acc-email" required="">
+                                </div>
+                                <!-- End .form-group -->
+
+                                <div class="form-group required-field">
+                                    <label for="account-password">Password</label>
+                                    <input type="password" class="form-control" id="account-password" name="account-password" required="">
+                                </div>
+                                <!-- End .form-group -->
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="change-password-checkbox" value="1">
+                                    <label class="custom-control-label" for="change-password-checkbox">Change Password</label>
+                                </div>
+                                <!-- End .custom-checkbox -->
+
+
+
+
+                                <div class="form-footer d-flex justify-content-between align-items-center">
+                                    <a href="#"><i class="material-icons">navigate_before</i>Back</a>
+
+                                    <div class="form-footer-right">
+                                        <button type="submit" class="btn btn-primary btn-primary">Save</button>
+                                    </div>
+                                </div>
+                                <!-- End .form-footer -->
+                            </form>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+
+
+                </div>
+				<div class="sidebar col-xl-3 col-lg-3 order-lg-1">
+					<div class="sidebar-product left-sidebar w-100 float-left">
+					<div class="title">
+					<a data-toggle="collapse" href="#sidebar-product" aria-expanded="false" aria-controls="sidebar-product" class="d-lg-none block-toggler">sale products</a>
+					</div>
+					<div id="sidebar-product" class="collapse w-100 float-left">
+					<div class="sidebar-block sale products">
+					<h3 class="widget-title">sale products</h3>
+							<div class="product-layouts">
+			<div class="product-thumb">
+    <ul class="vertical-menu">
+        <li class="menuitem" onclick="showContent('dashboard')"><i class="fas fa-tachometer-alt"></i> <a href="{% url 'core:dashboard' %}">Dashboard</a></li>
+        <li class="menuitem" style="background-color: #007bff; color: #fff;" onclick="showContent('orders')"><i class="fas fa-shopping-cart"></i> Orders</li>
+
+        <li class="menuitem" onclick="logout()"><i class="fas fa-sign-out-alt"></i><a href="{% url 'userauths:sign-out' %}">Log out</a></li>
+    </ul>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+    showContent('orders');
+});
+                </script>
+</div>
+
+		</div>
+
+					</div>
+					</div>
+					</div>
+				</div>
+            </div>
+        </div>
+    </div>
+ <!-- Nút in hóa đơn -->
+<div class="button-container">
+    <button onclick="printInvoice()" class="btn btn-primary">Print Invoice</button>
+</div>
+
+<style>
+
+    .button-container {
+       margin-left: 1100px;
+    }
+</style>
+
+
+
+<script>
+    // Hàm để in hóa đơn
+    function printInvoice() {
+        window.print();
+    }
+
+    // Hàm để lưu PDF hóa đơn
+    function saveAsPDF() {
+        // Tạo một phiên bản HTML của hóa đơn
+        var htmlContent = document.getElementById('content').innerHTML;
+        // Sử dụng thư viện jsPDF để tạo PDF từ HTML
+        var pdf = new jsPDF();
+        // Thêm HTML vào PDF
+        pdf.fromHTML(htmlContent, 15, 15);
+        // Lưu PDF
+        pdf.save('invoice.pdf');
+    }
+</script>
+
+
+
+
+   <script>
+    function showContent(contentType) {
+        var contentDiv = document.getElementById('content');
+        var dashboardDiv = document.getElementById('dashboard-content');
+        var ordersDiv = document.getElementById('orders-content');
+        var addressDiv = document.getElementById('address-content');
+        var accountDiv = document.getElementById('account-content');
+
+        switch (contentType) {
+            case 'dashboard':
+                hideAllContent();
+                dashboardDiv.style.display = 'block';
+                break;
+            case 'orders':
+                hideAllContent();
+                ordersDiv.style.display = 'block';
+                break;
+
+            case 'address':
+                hideAllContent();
+                addressDiv.style.display = 'block';
+                break;
+            case 'account':
+                hideAllContent();
+                accountDiv.style.display = 'block';
+                break;
+            default:
+                break;
+        }
+    }
+
+    function hideAllContent() {
+        var dashboardDiv = document.getElementById('dashboard-content');
+        var ordersDiv = document.getElementById('orders-content');
+        var addressDiv = document.getElementById('address-content');
+        var accountDiv = document.getElementById('account-content');
+
+        dashboardDiv.style.display = 'none';
+        ordersDiv.style.display = 'none';
+        addressDiv.style.display = 'none';
+        accountDiv.style.display = 'none';
+    }
+</script>
+
+ {% endblock content %}

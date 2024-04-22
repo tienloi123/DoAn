@@ -1,0 +1,25 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div id="payment-completed">
+    <h2><strong>Payment Completed</strong></h2>
+    <p>Your order has been successfully placed.</p>
+    <p>Order ID #{{order.oid}}</p>
+</div>
+
+
+<style>
+    #payment-completed {
+    text-align: center; /* Căn giữa nội dung */
+}
+
+#payment-completed h2 {
+    margin-bottom: 10px; /* Khoảng cách giữa "Payment Completed" và đoạn văn bản phía dưới */
+    font-size: 2em;
+    color: green;
+}
+
+</style>
+{% endblock content %}

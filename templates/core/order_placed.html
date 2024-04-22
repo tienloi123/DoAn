@@ -1,0 +1,28 @@
+<!-- order_placed.html -->
+
+{% extends 'partials/base.html' %}
+
+{% block content %}
+
+<div id="payment-completed">
+    <h2><strong>Successfully placed the order</strong></h2>
+    <p>Thank you for placing your order. You will soon receive a confirmation.</p>
+
+</div>
+
+
+<style>
+    #payment-completed {
+    text-align: center; /* Căn giữa nội dung */
+}
+
+#payment-completed h2 {
+    margin-bottom: 10px; /* Khoảng cách giữa "Payment Completed" và đoạn văn bản phía dưới */
+    font-size: 2em;
+    color: green;
+}
+
+</style>
+
+
+{% endblock content %}

@@ -1,0 +1,266 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+ {% block content %}
+<body xmlns="http://www.w3.org/1999/html">
+
+
+	<nav aria-label="breadcrumb" class="w-100 float-left">
+  <ol class="breadcrumb parallax justify-content-center" data-source-url="{% static 'img/banner/parallax.jpg' %}" style="background-image: url(&quot;img/banner/parallax.jpg&quot;); background-position: 50% 0.809717%;">
+    <li class="breadcrumb-item"><a href="#">Home</a></li>
+  </ol>
+</nav>
+
+	<div class="cart-area table-area pt-110 pb-95 float-left w-100" id="wishlist-list">
+            <div class="container">
+			<div class=" cart-wrapper float-left w-100">
+                <div class="table-responsive">
+                    <table class="table product-table text-center">
+                        <thead>
+                            <tr>
+                                <th class="table-remove text-uppercase">remove</th>
+                                <th class="table-image text-uppercase">image</th>
+                                <th class="table-p-name text-uppercase">product</th>
+                                <th class="table-p-price text-uppercase">price</th>
+                                <th class="table-p-qty text-uppercase">Stock Status</th>
+                                <th class="table-total text-uppercase">add to cart</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for w in w %}
+
+                            <tr>
+                                <td class="table-remove"><button data-wishlist-product="{{ w.id }}" class="delete-wishlist-product"><i class="material-icons">delete</i></button></td>
+                                <td class="table-image"><a href="product-details.html"><img src="{{w.product.image.url}}" alt=""></a></td>
+                                <td class="table-p-name text-capitalize"><a href="{% url 'core:product-detail' w.product.pid %}">{{w.product.title|truncatechars:30}}</a></td>
+                                <td class="table-p-price">
+                                    <span>$</span>
+                                    <span class=" current-product-price-{{ p.id }}">{{w.product.price}}</span>
+                                </td>
+                                <td class="table-p-qty">
+                                    <span class="stock-status in-stock mb-0">{% if w.product.in_stock %} in stock {% else %} Out of stock {% endif %}</span>
+                                </td>
+
+                                <td class="table-addtocart">
+                                    <input type="hidden" value="{{ w.product.stock_count }}"  class="product-stock-{{ w.product.id }}">
+                                    <input type="hidden" value="{{ w.product.price }}" id="product-price">
+                                    <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ w.product.id }}">
+                                    <input type="hidden" value="{{ w.product.pid }}"  class="product-pid-{{ w.product.id }}">
+                                    <input type="hidden" value="{{ w.product.image.url }}"  class="product-image-{{ w.product.id }}">
+                                    <input type="hidden" value="{{ w.product.id }}"  class="product-id-{{ w.product.id }}">
+                                    <input type="hidden" value="{{ w.product.title }}"  class="product-title-{{ w.product.id }}">
+                                    <input type="hidden" value="{{ p.pid }}"  class="product-pid-{{ p.id }}">
+                                    <button type="submit" class="btn btn-primary btn-cart m-0 add-to-cart-btn-btn-btn" data-index="{{ w.product.id }}"  ><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+
+                                </td>
+
+                            </tr>
+                        {% empty %}
+                              <tr>
+                                <td class="table-remove"><p>Nothing in wishlist yet</p></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+
+        </div>
+<!--    remove wishlist-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+   $(document).ready(function(){
+    $(document).on("click", ".delete-wishlist-product", function() {
+        let wishlist_id = $(this).attr("data-wishlist-product");
+
+        console.log("wishlist ID is :", wishlist_id);
+
+        $.ajax({
+            url: "/remove-from-wishlist",
+            data: {
+                "id": wishlist_id
+            },
+            dataType: "json",
+            beforeSend: function() {
+                console.log("delete");
+            },
+            success: function(response) {
+                // Kiểm tra xem có dữ liệu trả về từ server không
+                if (response && response.data) {
+                    // Cập nhật danh sách mong muốn với dữ liệu mới
+                    $("#wishlist-list").html(response.data);
+                } else {
+                    console.log("No data returned from server.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    });
+});
+
+
+</script>
+<script>
+                                    $(document).ready(function(){
+                                        $(".add-to-cart-btn-btn-btn").on("click", function(){
+                                            event.preventDefault(); // Ngăn chặn sự kiện click lan ra
+                                            let this_val = $(this);
+                                            let index = this_val.attr("data-index");
+
+                                            let quantity = $(".product-quantity-" + index).val();
+                                            let product_title = $(".product-title-" + index).val();
+
+                                            let product_id = $(".product-id-" + index).val();
+                                            let product_price = $("#product-price").val();
+
+                                            let product_pid = $(".product-pid-" + index).val();
+                                            let product_image = $(".product-image-" + index).val();
+                                            let product_stock = $(".product-stock-" + index).val();
+
+											console.log("product_pid:", product_pid);
+                                            console.log("quantity:", quantity);
+                                            console.log("Title:", product_title);
+                                            console.log("Price:", product_price);
+                                            console.log("Id:", product_id);
+                                            console.log("Pid:", product_pid);
+                                            console.log("Image:", product_image);
+                                            console.log("Index:", index);
+                                            console.log("stock:", product_stock);
+                                            console.log("Current Element:", this_val);
+
+                                            $.ajax({
+                                                url: '/add-to-cart',
+                                                data:{
+                                                    'id': product_id,
+                                                    'pid': product_pid,
+                                                    'image': product_image,
+                                                    'qty': quantity,
+                                                    'title': product_title,
+                                                    'price': product_price,
+                                                    'stock': product_stock,
+                                                },
+                                                dataType: 'json',
+                                                beforeSend: function(){
+                                                    console.log("Adding Product to cart...");
+                                                },
+                                                success: function(response){
+                                                    this_val.html("✔")
+                                                    console.log("Added Product to Cart!");
+                                                    $(".cart-items-count").text(response.totalcartitems);
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
+    <!-- Footer -->
+<footer class="page-footer font-small">
+    <div class="container text-center text-md-left">
+      <div class="row">
+        <div class="col-md-2 footer-cms footer-column">
+			<div class="ttcmsfooter">
+              <div class="footer-logo"><img src="img/logos/footer-logo.png" alt="footer-logo"></div>
+              <div class="footer-desc">At vero eos et accusamus et iusto odio dignissimos ducimus, duis faucibus enim vitae</div>
+			  </div>
+		</div>
+        <div class="col-md-2 footer-column">
+		<div class="title">
+          <a href="#company" class="font-weight-normal text-capitalize mb-10" data-toggle="collapse" aria-expanded="false">company</a>		  </div>
+          <ul id="company" class="list-unstyled collapse">
+            <li>
+              <a href="#">search</a>            </li>
+            <li>
+              <a href="#">New Products</a>            </li>
+            <li>
+              <a href="category.html">Best Collection</a>            </li>
+            <li>
+              <a href="wishlist.html">wishlist</a>            </li>
+          </ul>
+        </div>
+        <div class="col-md-2 footer-column">
+			<div class="title">
+          <a href="#products" class="font-weight-normal text-capitalize mb-10" data-toggle="collapse" aria-expanded="false">products</a>		  </div>
+          <ul id="products" class="list-unstyled collapse">
+            <li>
+              <a href="blog-details.html">blog</a>            </li>
+            <li>
+              <a href="about-us.html">about us</a>            </li>
+            <li>
+              <a href="contact-us.html">contact us</a>            </li>
+            <li>
+              <a href="my-account.html">my account</a>            </li>
+          </ul>
+
+        </div>
+		<div class="col-md-2 footer-column">
+					<div class="title">
+          <a href="#account" class="font-weight-normal text-capitalize mb-10" data-toggle="collapse" aria-expanded="false">your account</a>		  </div>
+  <ul id="account" class="list-unstyled collapse">
+	<li>
+	  <a href="blog-details.html">personal info</a>            </li>
+	<li>
+	  <a href="#">orders</a>            </li>
+	<li>
+	  <a href="contact-us.html">addresses</a>            </li>
+	<li>
+	  <a href="my-account.html">my wishlists</a>            </li>
+  </ul>
+
+</div>
+        <div class="col-md-2 footer-column">
+		<div class="title">
+          <a href="#information" class="font-weight-normal text-capitalize mb-10" data-toggle="collapse" aria-expanded="false">store information</a>		  </div>
+          <ul id="information" class="list-unstyled collapse">
+            <li class="contact-detail links">
+              <span class="address">
+			  		<span class="icon"><i class="material-icons">location_on</i></span>
+					<span class="data"> 4030, Central Bazzar, opp. Varachha Police Station, Varachha Main Road, Surat, Gujarat 395006, India</span>			  </span>            </li>
+            <li class="links">
+               <span class="contact">
+			  		<span class="icon"><i class="material-icons">phone</i></span>
+					<span class="data"><a href="tel:(99)55669999">+ (99) 55-669-999</a></span>			  </span>            </li>
+            <li class="links">
+               <span class="email">
+			  		<span class="icon"><i class="material-icons">email</i></span>
+					<span class="data"><a href="mailto:demo.store@gmail.com">demo.store@gmail.com</a></span>  </span>          </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Copyright -->
+	<div class="footer-bottom-wrap">
+		<div class="container">
+		<div class="row">
+		<div class="footer-copyright text-center py-3">
+              © 2019 - Boostrap theme by store™
+		</div>
+		</div>
+    </div>
+	</div>
+         <a href="#" id="goToTop" title="Back to top" class="btn-primary"><i class="material-icons arrow-up">keyboard_arrow_up</i></a>
+
+
+  </footer>
+  <!-- Footer -->
+
+
+
+
+			<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/5ac1aabb4b401e45400e4197/default';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+ {% endblock content %}
+
+
+
+

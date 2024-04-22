@@ -1,0 +1,65 @@
+
+
+
+	<div class="cart-area table-area pt-110 pb-95 float-left w-100" >
+            <div class="container">
+			<div class=" cart-wrapper float-left w-100">
+                <div class="table-responsive">
+                    <table class="table product-table text-center">
+                        <thead>
+                            <tr>
+                                <th class="table-remove text-uppercase">remove</th>
+                                <th class="table-image text-uppercase">image</th>
+                                <th class="table-p-name text-uppercase">product</th>
+                                <th class="table-p-price text-uppercase">price</th>
+                                <th class="table-p-qty text-uppercase">Stock Status</th>
+                                <th class="table-total text-uppercase">add to cart</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for w in w %}
+                            <tr>
+                                <td class="table-remove"><button data-wishlist-product="{{ w.id }}" class="delete-wishlist-product"><i class="material-icons">delete</i></button></td>
+                                <td class="table-image"><a href="product-details.html"><img src="{{w.product.image.url}}" alt=""></a></td>
+                                <td class="table-p-name text-capitalize"><a href="{% url 'core:product-detail' w.product.pid %}">{{w.product.title|truncatechars:30}}</a></td>
+                                <td class="table-p-price">
+                                    <span>$</span>
+                                    <span class=" current-product-price-{{ p.id }}">{{w.product.price}}</span>
+                                </td>
+                                <td class="table-p-qty">
+                                    <span class="stock-status in-stock mb-0">{% if w.product.in_stock %} in stock {% else %} Out of stock {% endif %}</span>
+                                </td>
+
+
+                                <td class="table-addtocart">
+                                    <input type="hidden" value="{{ w.product.price }}" id="product-price" class="product-quantity-{{ p.id }}">
+
+                                    <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ w.product.id }}">
+                                    <input type="hidden" value="{{ w.product.pid }}"  class="product-pid-{{ w.product.id }}">
+                                    <input type="hidden" value="{{ w.product.image.url }}"  class="product-image-{{ w.product.id }}">
+                                    <input type="hidden" value="{{ w.product.id }}"  class="product-id-{{ w.product.id }}">
+                                    <input type="hidden" value="{{ w.product.title }}"  class="product-title-{{ w.product.id }}">
+
+                                    <button type="submit" class="btn btn-primary btn-cart m-0" data-index="{{ w.product.id }}" id="add-to-cart-btn-btn-btn" ><i class="material-icons">shopping_cart</i><span>Add to cart</span></button>
+
+                                </td>
+
+                            </tr>
+                        {% empty %}
+                              <tr>
+                                <td class="table-remove"><p>Nothing in wishlist yet</p></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+
+
