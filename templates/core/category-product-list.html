@@ -182,10 +182,12 @@
 											<input type="hidden" value="{{ p.price }}" id="product-price">
 											<input type="hidden" value="{{ p.id }}"  class="product-id-{{ p.id }}">
 											<input type="hidden" value="{{ p.title }}"  class="product-title-{{ p.id }}">
-												<button type="submit" class="add-to-cart-btn-btn-btn" data-index="{{ p.id }}" id="add-to-cart-btn-btn-btn" ><i class="material-icons">shopping_cart</i><span>Out of stock</span></button>
+											<input type="hidden" value="{{ p.stock_count }}"  class="product-stock-{{ p.id }}">
+
+												<button  type="submit" class="add-to-cart-btn-btn-btn" data-index="{{ p.id }}" id="add-to-cart-btn-btn-btn" ><i class="material-icons">shopping_cart</i><span>Out of stock</span></button>
 												<button type="submit" class="btn btn-primary btn-wishlist add-to-wishlist" data-product-item="{{p.id}}"><i class="material-icons" >favorite</i><span>wishlist</span></button>
 												<button type="button" class="btn btn-primary btn-compare"><i class="material-icons">equalizer</i><span>Compare</span></button>
-												<a href="{% url 'core:product-detail' p.pid %}"><button type="button" class=""  data-toggle="modal" data-target="#product_view"><i class="material-icons">visibility</i><span>Quick View</span></button></a>
+												<a href="{% url 'core:product-detail' p.pid %}" ><button type="button" class=""  data-toggle="modal" data-target="#product_view"><i class="material-icons" >visibility</i><span>Quick View</span></button></a>
 											</div>
 							</div>
 						</div>
@@ -196,7 +198,7 @@
 
 				</div>
 					<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-					<script>
+		<script>
                                     $(document).ready(function(){
                                         $(".add-to-cart-btn-btn-btn").on("click", function(){
                                             event.preventDefault(); // Ngăn chặn sự kiện click lan ra
@@ -211,8 +213,9 @@
 
                                             let product_pid = $(".product-pid-" + index).val();
                                             let product_image = $(".product-image-" + index).val();
+                                            let product_stock = $(".product-stock-" + index).val();
 
-
+											console.log("product_pid:", product_pid);
                                             console.log("quantity:", quantity);
                                             console.log("Title:", product_title);
                                             console.log("Price:", product_price);
@@ -220,6 +223,7 @@
                                             console.log("Pid:", product_pid);
                                             console.log("Image:", product_image);
                                             console.log("Index:", index);
+                                            console.log("stock:", product_stock);
                                             console.log("Current Element:", this_val);
 
                                             $.ajax({
@@ -231,6 +235,7 @@
                                                     'qty': quantity,
                                                     'title': product_title,
                                                     'price': product_price,
+                                                    'stock': product_stock,
                                                 },
                                                 dataType: 'json',
                                                 beforeSend: function(){
@@ -1322,6 +1327,23 @@ s1.charset='UTF-8';
 s1.setAttribute('crossorigin','*');
 s0.parentNode.insertBefore(s1,s0);
 })();
+
+</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+	<script>
+document.addEventListener("DOMContentLoaded", function() {
+    {% for p in products %}
+        var addToCartButton = document.getElementById("add-to-cart-btn-btn-btn-{{ p.id }}");
+        var stockCount = {{ p.stock_count }};
+        var stockCountElement = document.getElementById("soluong1");
+        console.log("jjjjjjjjj:", stockCount);
+
+        if (stockCount === 0) {
+            addToCartButton.disabled = true; // Vô hiệu hóa nút
+        }
+    {% endfor %}
+});
 
 </script>
 <!--End of Tawk.to Script-->

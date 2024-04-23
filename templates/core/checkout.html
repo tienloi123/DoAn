@@ -20,6 +20,13 @@
 
 
 </h4>
+	{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 	<br>
 <!--	<a href="{% url 'core:cart' %}" class="btn btn-primary float-left w-100 text-center">Go back to cart</a>-->
 <div class="list-group mb-3">

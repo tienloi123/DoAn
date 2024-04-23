@@ -25,6 +25,13 @@
 
     <!-- Custom styles for this template -->
   </head>
+  <script>
+window.tensorChatbotConfig = {
+  chatbotId: "8138ea1b-bfe0-4e99-ba47-4e0eb9b411b5",
+};
+</script>
+
+<script src="https://server.chatbot.tensor.vn/api/public/chatbot/file/embed.min.js" defer></script>
 
   <body class="index layout1">
 
@@ -96,7 +103,7 @@
 		</div>
 		</div>
 				<div class="cart-wrapper">
-			<button type="button" >
+			<button type="button" style="border: none;" >
 				<a href="{% url 'core:wishlist' %}">
 				<i class="fa fa-heart fa-2x"></i>
 				<span class="ttcount cart-items-count">{{ wishlist.count }}</span>	</a>

@@ -142,7 +142,7 @@ def add_to_cart(request):
         'pid': request.GET['pid'],
         'stock': request.GET['stock'],
     }
-    print("Add to cart request data: %s", cart_product)
+
     if 'cart_data_obj' in request.session:
         if str(request.GET['id']) in request.session['cart_data_obj']:
             cart_data = request.session['cart_data_obj']
@@ -168,7 +168,6 @@ def cart_view(request):
         address = Address.objects.filter(user_id=user.id, status=True).first()
         return render(request, "core/cart.html", {"cart_data":request.session['cart_data_obj'],'totalcartitems':len(request.session['cart_data_obj']), 'cart_total_amount': cart_total_amount, "profile": profile, "address": address})
     else:
-        messages.warning(request, "Giỏ hàng trống")
         return redirect("core:index")
 
 def delete_item_from_cart(request):
@@ -247,7 +246,6 @@ def customer_dashboard(request):
             address = address,
             mobile = mobile,
         )
-        messages.success(request, "Address Added Successfully")
         return redirect("core:dashboard")
     context = {
         "orders": orders,
@@ -277,7 +275,6 @@ def make_address_default(request):
 def add_to_wishlist(request):
     product_id = request.GET['id']
     product = Product.objects.get(id=product_id)
-    print("product id issssssssss:" + product_id)
 
     context = {}
     wishlist_count = wishlist_model.objects.filter(product=product, user = request.user).count()
@@ -328,14 +325,12 @@ def remove_wishlist(request):
 def checkout(request, oid):
     order = CartOrder.objects.get(oid=oid)
     order_items = CartOrderItems.objects.filter(order=order)
-    messages.warning(request, "Coupon already activated")
 
     if request.method == "POST":
         code = request.POST.get("code")
         coupon = Coupon.objects.filter(code=code, active=True).first()
         if coupon:
             if coupon in order.coupons.all():
-                messages.warning(request, "Coupon already activated")
                 return redirect("core:checkout", order.oid)
             else:
                 discount = order.price * coupon.discount / 100
@@ -344,10 +339,9 @@ def checkout(request, oid):
                 order.saved += discount
                 order.save()
 
-                messages.success(request, "Coupon Activated")
                 return redirect("core:checkout", order.oid)
         else:
-            messages.error(request, "Coupon does not exist")
+            messages.warning(request, "Coupon does not exist")
             return redirect("core:checkout", order.oid)
 
 
